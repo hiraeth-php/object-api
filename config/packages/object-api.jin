@@ -1,0 +1,34 @@
+[routing]
+
+	;
+	; The prefix for all the routes in this group, changing this will change the base path.
+	;
+
+	prefix = env(API_PREFIX, /api)
+
+	;
+	; Route definitions in this group.  Add tab separate lines for each route in the format:
+	;
+
+	routes = map(application.route) {
+		;
+		; Auth API related endpoints
+		;
+
+		/csrf	API\Session\GetCsrfToken									["GET"]
+
+		;
+		; Object API related endpoints
+		;
+
+		/objects/							API\Object\GetCollections		["GET"]
+
+		/objects/{repository:r}/			API\Object\GetEntities			["GET"]
+		/objects/{repository:r}/			API\Object\PostEntity			["POST"]
+		/objects/{repository:r}/			API\Object\PatchEntities		["PATCH"]
+		/objects/{repository:r}/			API\Object\DeleteEntities		["DELETE"]
+
+		/objects/{repository:r}/{id}		API\Object\GetEntity			["GET"]
+		/objects/{repository:r}/{id}		API\Object\PatchEntity			["PATCH"]
+		/objects/{repository:r}/{id}		API\Object\DeleteEntity			["DELETE"]
+	}
