@@ -74,7 +74,7 @@ class Entity extends Normalizer
 		foreach ($fields as $field) {
 			$data[$field] = $meta_data->getFieldValue($this('data'), $field);
 
-			if ($meta_data->hasAssociation($field)) {
+			if ($data[$field] && $meta_data->hasAssociation($field)) {
 				if ($data[$field] instanceof Collection) {
 					$data[$field] = $data[$field]->map(function($entity) {
 						return Api\Json\Entity::prepare($entity);
