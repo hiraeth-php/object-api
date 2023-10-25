@@ -3,6 +3,8 @@
 	"description": "Doctrine driven object API for the Hiraeth Nano-Framework",
 	"keywords": [],
 	"license": "MIT",
+	"minimum-stability": "dev",
+	"prefer-stable": true,
 	"authors": [
 		{
 			"name": "Matthew J. Sahagian",
