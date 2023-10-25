@@ -27,7 +27,7 @@ class Entity extends Normalizer
 	/**
 	 *
 	 */
-	public function __construct(ManagerRegistry $managers, Api\Utility\Linker $linker)
+	public function __construct(ManagerRegistry $maApi\Utility\Linker $linker)
 	{
 		$this->managers = $managers;
 		$this->linker   = $linker;
@@ -77,11 +77,11 @@ class Entity extends Normalizer
 			if ($meta_data->hasAssociation($field)) {
 				if ($data[$field] instanceof Collection) {
 					$data[$field] = $data[$field]->map(function($entity) {
-						return Hiraeth\Api\Json\Entity::prepare($entity);
+						return Api\Json\Entity::prepare($entity);
 					})->getValues();
 
 				} else {
-					$data[$field] = Hiraeth\Api\Json\Entity::prepare($data[$field]);
+					$data[$field] = Api\Json\Entity::prepare($data[$field]);
 				}
 			}
 		}
