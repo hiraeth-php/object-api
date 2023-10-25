@@ -2,7 +2,7 @@
 
 namespace Hiraeth\Api\Object;
 
-use Hireath\Api;
+use Hiraeth\Api;
 use Hiraeth\Doctrine\AbstractRepository;
 use Doctrine\ORM\Query\QueryException;
 
