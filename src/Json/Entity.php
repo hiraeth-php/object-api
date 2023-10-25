@@ -27,7 +27,7 @@ class Entity extends Normalizer
 	/**
 	 *
 	 */
-	public function __construct(ManagerRegistry $maApi\Utility\Linker $linker)
+	public function __construct(ManagerRegistry $managers, Api\Utility\Linker $linker)
 	{
 		$this->managers = $managers;
 		$this->linker   = $linker;
