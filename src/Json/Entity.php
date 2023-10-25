@@ -88,18 +88,4 @@ class Entity extends Normalizer
 
 		return Normalizer::prepare($data, $this('nested'));
 	}
-
-
-	/**
-	 *
-	 */
-	protected function link(string $path, array $params = array()): string
-	{
-		$path = call_user_func($this->link, $path, $params);
-
-		return $this->resolver->getRequest()->getUri()
-			->withPath($path)
-			->withQuery('')
-		;
-	}
 }
