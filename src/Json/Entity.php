@@ -1,8 +1,8 @@
 <?php
 
-namespace API\Json;
+namespace Hiraeth\Api\Json;
 
-use API;
+use Hiraeth\Api;
 use Json\Normalizer;
 use Hiraeth\Doctrine\ManagerRegistry;
 use Doctrine\Common\Collections\Collection;
@@ -14,7 +14,7 @@ use Doctrine\Common\Proxy\Proxy;
 class Entity extends Normalizer
 {
 	/**
-	 * @var API\Utility\Linker
+	 * @var Hiraeth\Api\Utility\Linker
 	 */
 	protected $linker;
 
@@ -27,7 +27,7 @@ class Entity extends Normalizer
 	/**
 	 *
 	 */
-	public function __construct(ManagerRegistry $managers, API\Utility\Linker $linker)
+	public function __construct(ManagerRegistry $managers, Api\Utility\Linker $linker)
 	{
 		$this->managers = $managers;
 		$this->linker   = $linker;
@@ -77,11 +77,11 @@ class Entity extends Normalizer
 			if ($meta_data->hasAssociation($field)) {
 				if ($data[$field] instanceof Collection) {
 					$data[$field] = $data[$field]->map(function($entity) {
-						return API\Json\Entity::prepare($entity);
+						return Hiraeth\Api\Json\Entity::prepare($entity);
 					})->getValues();
 
 				} else {
-					$data[$field] = API\Json\Entity::prepare($data[$field]);
+					$data[$field] = Hiraeth\Api\Json\Entity::prepare($data[$field]);
 				}
 			}
 		}

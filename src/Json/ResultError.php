@@ -1,6 +1,6 @@
 <?php
 
-namespace API\Json;
+namespace Hiraeth\Api\Json;
 
 use Json\Normalizer;;
 

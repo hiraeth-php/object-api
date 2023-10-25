@@ -1,6 +1,6 @@
 <?php
 
-namespace API\Utility;
+namespace Hiraeth\Api\Utility;
 
 use Hiraeth\Application;
 use Hiraeth\Routing\Resolver;

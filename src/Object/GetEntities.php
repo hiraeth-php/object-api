@@ -1,8 +1,8 @@
 <?php
 
-namespace API\Object;
+namespace Hiraeth\Api\Object;
 
-use API;
+use Hiraeth\Api;
 use Json\Normalizer;
 use Hiraeth\Doctrine\ManagerRegistry;
 use Hiraeth\Doctrine\AbstractRepository;
@@ -14,7 +14,7 @@ use Doctrine\ORM\Query\QueryException;
 class GetEntities extends AbstractAction
 {
 	/**
-	 * @var API\Utility\Linker
+	 * @var Hiraeth\Api\Utility\Linker
 	 */
 	protected $linker;
 
@@ -26,7 +26,7 @@ class GetEntities extends AbstractAction
 	/**
 	 *
 	 */
-	public function __construct(ManagerRegistry $managers, API\Utility\Linker $linker)
+	public function __construct(ManagerRegistry $managers, Api\Utility\Linker $linker)
 	{
 		$this->managers = $managers;
 		$this->linker   = $linker;
@@ -74,7 +74,7 @@ class GetEntities extends AbstractAction
 
 			}
 
-			return $this->response(400, new API\Json\ResultError($this->get(), $message));
+			return $this->response(400, new Api\Json\ResultError($this->get(), $message));
 		}
 
 		$class     = $repository->getClassName();
@@ -103,7 +103,7 @@ class GetEntities extends AbstractAction
 			'$pool' => $this->linker->link('/objects/'),
 			'$data' => array_map(
 				function($entity) {
-					return API\Json\Entity::prepare($entity, FALSE);
+					return Api\Json\Entity::prepare($entity, FALSE);
 				},
 				$result->getValues()
 			),

@@ -1,8 +1,8 @@
 <?php
 
-namespace API\Object;
+namespace Hiraeth\Api\Object;
 
-use API;
+use Hiraeth\Api;
 use Json\Normalizer;
 use Hiraeth\Doctrine\ManagerRegistry;
 
@@ -14,7 +14,7 @@ class GetCollections extends AbstractAction
 	/**
 	 *
 	 */
-	public function __invoke(ManagerRegistry $managers, API\Utility\Linker $linker)
+	public function __invoke(ManagerRegistry $managers, Api\Utility\Linker $linker)
 	{
 		if (!$this->auth->is('user')) {
 			return $this->response(401, json_encode([

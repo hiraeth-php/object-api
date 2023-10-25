@@ -1,11 +1,11 @@
 <?php
 
-namespace API\Object;
+namespace Hiraeth\Api\Object;
 
 use Checkpoint;
-use API\Result;
-use API\ErrorResult;
-use API\AbstractAction;
+use Hiraeth\Api\Result;
+use Hiraeth\Api\ErrorResult;
+use Hiraeth\Api\AbstractAction;
 use Hiraeth\Doctrine\AbstractRepository;
 
 /**

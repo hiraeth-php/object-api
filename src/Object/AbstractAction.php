@@ -1,6 +1,6 @@
 <?php
 
-namespace API\Object;
+namespace Hiraeth\Api\Object;
 
 use Auth;
 use Auth\Manager;

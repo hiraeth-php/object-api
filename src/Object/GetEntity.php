@@ -1,8 +1,8 @@
 <?php
 
-namespace API\Object;
+namespace Hiraeth\Api\Object;
 
-use API;
+use Hireath\Api;
 use Hiraeth\Doctrine\AbstractRepository;
 use Doctrine\ORM\Query\QueryException;
 
@@ -42,7 +42,7 @@ class GetEntity extends AbstractAction
 
 			}
 
-			return $this->response(400, new API\Json\ResultError($this->get(), $message));
+			return $this->response(400, new Api\Json\ResultError($this->get(), $message));
 		}
 
 		if (!$record) {
@@ -57,6 +57,6 @@ class GetEntity extends AbstractAction
 			]));
 		}
 
-		return API\Json\Entity::prepare($record, FALSE);
+		return Api\Json\Entity::prepare($record, FALSE);
 	}
 }

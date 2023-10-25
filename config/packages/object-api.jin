@@ -15,20 +15,20 @@
 		; Auth API related endpoints
 		;
 
-		/csrf	API\Session\GetCsrfToken									["GET"]
+		/csrf	Hiraeth\Api\Session\GetCsrfToken									["GET"]
 
 		;
 		; Object API related endpoints
 		;
 
-		/objects/							API\Object\GetCollections		["GET"]
+		/objects/							Hiraeth\Api\Object\GetCollections		["GET"]
 
-		/objects/{repository:r}/			API\Object\GetEntities			["GET"]
-		/objects/{repository:r}/			API\Object\PostEntity			["POST"]
-		/objects/{repository:r}/			API\Object\PatchEntities		["PATCH"]
-		/objects/{repository:r}/			API\Object\DeleteEntities		["DELETE"]
+		/objects/{repository:r}/			Hiraeth\Api\Object\GetEntities			["GET"]
+		/objects/{repository:r}/			Hiraeth\Api\Object\PostEntity			["POST"]
+		/objects/{repository:r}/			Hiraeth\Api\Object\PatchEntities		["PATCH"]
+		/objects/{repository:r}/			Hiraeth\Api\Object\DeleteEntities		["DELETE"]
 
-		/objects/{repository:r}/{id}		API\Object\GetEntity			["GET"]
-		/objects/{repository:r}/{id}		API\Object\PatchEntity			["PATCH"]
-		/objects/{repository:r}/{id}		API\Object\DeleteEntity			["DELETE"]
+		/objects/{repository:r}/{id}		Hiraeth\Api\Object\GetEntity			["GET"]
+		/objects/{repository:r}/{id}		Hiraeth\Api\Object\PatchEntity			["PATCH"]
+		/objects/{repository:r}/{id}		Hiraeth\Api\Object\DeleteEntity			["DELETE"]
 	}

@@ -1,6 +1,6 @@
 <?php
 
-namespace API\Session;
+namespace Hiraeth\Api\Session;
 
 use Auth;
 use Hiraeth\Session;
