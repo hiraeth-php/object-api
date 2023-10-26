@@ -36,7 +36,7 @@ class GetCollections extends AbstractAction
 							'repository' => $repository
 						]
 					),
-					'$meta' => [
+					'meta' => [
 						'total' => $repository->queryCount([]),
 						'type'  => sprintf('%s[]', $class),
 					]
@@ -45,8 +45,8 @@ class GetCollections extends AbstractAction
 		}
 
 		return Normalizer::prepare([
-			'$data' => $data,
-			'$meta' => [
+			'data' => $data,
+			'meta' => [
 				'total' => count($data)
 			]
 		]);

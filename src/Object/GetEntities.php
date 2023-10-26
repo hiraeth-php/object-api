@@ -101,13 +101,13 @@ class GetEntities extends AbstractAction
 
 		return Normalizer::prepare([
 			'$pool' => $this->linker->link('/objects/'),
-			'$data' => array_map(
+			'data' => array_map(
 				function($entity) {
 					return Api\Json\Entity::prepare($entity, FALSE);
 				},
 				$result->getValues()
 			),
-			'$meta' => [
+			'meta' => [
 				'total'    => $total,
 				'limit'    => $limit,
 				'page'     => $page,
