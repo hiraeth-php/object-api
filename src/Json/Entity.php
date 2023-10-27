@@ -3,6 +3,7 @@
 namespace Hiraeth\Api\Json;
 
 use Hiraeth\Api;
+use Hiraeth\Api\Utility;
 use Json\Normalizer;
 use Hiraeth\Doctrine\ManagerRegistry;
 use Doctrine\Common\Collections\Collection;
@@ -14,7 +15,12 @@ use Doctrine\Common\Proxy\Proxy;
 class Entity extends Normalizer
 {
 	/**
-	 * @var Hiraeth\Api\Utility\Linker
+	 * @var Utility\Identity
+	 */
+	protected $identity;
+
+	/**
+	 * @var Utility\Linker
 	 */
 	protected $linker;
 
@@ -27,9 +33,10 @@ class Entity extends Normalizer
 	/**
 	 *
 	 */
-	public function __construct(ManagerRegistry $managers, Api\Utility\Linker $linker)
+	public function __construct(ManagerRegistry $managers, Utility\Identity $identity, Utility\Linker $linker)
 	{
 		$this->managers = $managers;
+		$this->identity = $identity;
 		$this->linker   = $linker;
 	}
 
@@ -43,14 +50,8 @@ class Entity extends Normalizer
 		$class        = get_class($this('data'));
 		$manager      = $this->managers->getManagerForClass($class);
 		$meta_data    = $manager->getClassMetadata($class);
-		$identity     = $meta_data->getIdentifierFieldNames();
 		$repository   = $manager->getRepository($class);
-		$url_identity = base64_encode(json_encode(array_combine($identity, array_map(
-			function ($field) {
-				return $this->$field;
-			},
-			$identity
-		))));
+		$url_identity = $this->identity->build($this('data'));
 
 		if ($this('data') instanceof Proxy) {
 			$this('data')->__load();
@@ -66,9 +67,16 @@ class Entity extends Normalizer
 		]);
 
 		if ($this('nested')) {
-			$fields = array_unique(array_merge($identity, $meta_data->getFieldNames()));
+			$fields = array_unique(array_merge(
+				$meta_data->getIdentifierFieldNames(),
+				$meta_data->getFieldNames()
+			));
+
 		} else {
-			$fields = array_unique(array_merge($meta_data->getFieldNames(), $meta_data->getAssociationNames()));
+			$fields = array_unique(array_merge(
+				$meta_data->getFieldNames(),
+				$meta_data->getAssociationNames()
+			));
 		}
 
 		foreach ($fields as $field) {

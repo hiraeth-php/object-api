@@ -49,7 +49,7 @@ class GetEntities extends AbstractAction
 			]));
 		}
 
-		if (!$this->auth->can('get', $repository)) {
+		if (!$this->auth->can('manage', $repository)) {
 			return $this->response(403, json_encode([
 				'error' => 'You do not have the required authorization to get these items'
 			]));
@@ -64,14 +64,12 @@ class GetEntities extends AbstractAction
 			$result = $repository->findBy($filter, $order, $limit, ($page - 1) * $limit, $total);
 
 		} catch (\Exception $e) {
+			$message = $e->getMessage();
+
 			switch(get_class($e)) {
 				case QueryException::class:
-					$message = trim(array_slice(explode(':', $e->getMessage()), -1)[0]);
+					$message = trim(array_slice(explode(':', $message), -1)[0]);
 					break;
-				default:
-					$message = $e->getMessage();
-					break;
-
 			}
 
 			return $this->response(400, new Api\Json\ResultError($this->get(), $message));

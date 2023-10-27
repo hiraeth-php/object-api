@@ -30,7 +30,7 @@ class GetCollections extends AbstractAction
 			$class        = $meta_data->getName();
 			$repository   = $manager->getRepository($class);
 
-			if ($this->auth->can('get', $repository)) {
+			if ($this->auth->can('manage', $repository)) {
 				$data[]       = [
 					'$pool' => $linker->link('/objects/{repository:r}/', [
 							'repository' => $repository

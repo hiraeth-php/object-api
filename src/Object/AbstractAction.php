@@ -20,15 +20,6 @@ class AbstractAction extends Actions\AbstractAction implements Auth\ManagedInter
 	/**
 	 *
 	 */
-	public function getIdentity($id)
-	{
-		return (array) json_decode(base64_decode($id), TRUE);
-	}
-
-
-	/**
-	 *
-	 */
 	public function setAuthManager(Manager $manager): object
 	{
 		$this->auth = $manager;

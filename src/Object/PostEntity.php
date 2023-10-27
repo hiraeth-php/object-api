@@ -3,8 +3,8 @@
 namespace Hiraeth\Api\Object;
 
 use Checkpoint;
-use Hiraeth\Api\ErrorResult;
-use Hiraeth\Api\AbstractAction;
+use Hiraeth\Api;
+use Hiraeth\Api\Utility;
 use Hiraeth\Doctrine\AbstractRepository;
 
 /**
@@ -13,36 +13,71 @@ use Hiraeth\Doctrine\AbstractRepository;
 class PostEntity extends AbstractAction
 {
 	/**
+	 * @var Utility\Identity
+	 */
+	protected $identity;
+
+	/**
+	 * @var Utility\Linker
+	 */
+	protected $linker;
+
+	/**
+	 *
+	 */
+	public function __construct(Utility\Identity $identity, Utility\Linker $linker)
+	{
+		$this->identity = $identity;
+		$this->linker   = $linker;
+	}
+
+
+	/**
 	 *
 	 */
 	public function __invoke(?AbstractRepository $repository)
 	{
-		$data = $this->request->getParsedBody();
+		if (!$this->auth->is('user')) {
+			return $this->response(401, json_encode([
+				'error' => 'You must be authorized to get an item'
+			]));
+		}
 
 		if (empty($repository)) {
-			return $this->response(404);
+			return $this->response(404, json_encode([
+				'error' => 'The requested pool does not exist'
+			]));
+		}
+
+		if (!$this->auth->can('create', $repository)) {
+			return $this->response(403, json_encode([
+				'error' => 'You do not have the required authorization to create this item'
+			]));
 		}
 
 		try {
-			$record = $repository->getRepository()->create($data, FALSE);
+			$data   = $this->request->getParsedBody();
+			$record = $repository->create($data, FALSE);
 
-			$repository->inspect($data, $this->request);
-			$repository->getRepository()->store($record, TRUE);
+			//TODO: Inspect
+			$repository->store($record, TRUE);
 
-		} catch (Checkpoint\ValidationException $error) {
-			$error = new ErrorResult(
-				$data, $error->getMessage(), $error->getMessages()
-			);
+		} catch (\Exception $e) {
+			$messages = array();
+			$message  = $e->getMessage();
 
-			return $this->response(409, json_encode($error));
+			if ($e instanceof Checkpoint\ValidationException) {
+				$messages = $e->getMessages();
+			}
+
+			return $this->response(409, new Api\Json\ResultError($data, $message, $messages));
 		}
 
 		return $this->response(201, NULL, [
-			'Location' => ($this->urlGenerator)(
-				'/api/v1/{repository:r}/{id}',
-				['repository' => $repository->getRepository()],
-				$record
-			)
+			'Location' => $this->linker->link('/objects/{repository:r}/{id}', [
+				'id'         => $this->identity->build($record),
+				'repository' => $repository
+			])
 		]);
 	}
 

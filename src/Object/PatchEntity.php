@@ -3,8 +3,8 @@
 namespace Hiraeth\Api\Object;
 
 use Checkpoint;
-use Hiraeth\Api\ErrorResult;
-use Hiraeth\Api\AbstractAction;
+use Hiraeth\Api;
+use Hiraeth\Api\Utility;
 use Hiraeth\Doctrine\AbstractRepository;
 
 /**
@@ -13,31 +13,77 @@ use Hiraeth\Doctrine\AbstractRepository;
 class PatchEntity extends AbstractAction
 {
 	/**
+	 * @var Utility\Identity
+	 */
+	protected $identity;
+
+
+	/**
+	 *
+	 */
+	public function __construct(Utility\Identity $identity)
+	{
+		$this->identity = $identity;
+	}
+
+	/**
 	 *
 	 */
 	public function __invoke(?AbstractRepository $repository, $id)
 	{
-		$data = $this->request->getParsedBody();
-
-		if (empty($repository)) {
-			return $this->response(404);
+		if (!$this->auth->is('user')) {
+			return $this->response(401, json_encode([
+				'error' => 'You must be authorized to get an item'
+			]));
 		}
 
-		if (!$record = $repository->getRepository()->findOneById($id)) {
-			return $this->response(404);
+		if (empty($repository)) {
+			return $this->response(404, json_encode([
+				'error' => 'The requested pool does not exist'
+			]));
 		}
 
 		try {
-			$repository->getRepository()->update($record, $data, FALSE);
-			$repository->inspect($data, $this->request);
-			$repository->getRepository()->store($record, TRUE);
+			if (!$record = $repository->find($this->identity->parse($id))) {
+				return $this->response(404, json_encode([
+					'error' => 'The requested item does not exist'
+				]));
+			}
 
-		} catch (Checkpoint\ValidationException $error) {
-			$error = new ErrorResult(
-				$data, $error->getMessage(), $error->getMessages()
-			);
+		} catch (\Exception $e) {
+			$message = $e->getMessage();
 
-			return $this->response(409, json_encode($error));
+			switch(get_class($e)) {
+				case QueryException::class:
+					$message = trim(array_slice(explode(':', $message), -1)[0]);
+					break;
+			}
+
+			return $this->response(400, new Api\Json\ResultError($this->get(), $message));
+		}
+
+		if (!$this->auth->can('update', $record)) {
+			return $this->response(403, json_encode([
+				'error' => 'You do not have the required authorization to update this item'
+			]));
+		}
+
+		try {
+			$data = $this->request->getParsedBody();
+
+			$repository->update($record, $data, FALSE);
+			// TODO: Inspect
+			$repository->store($record, TRUE);
+
+		} catch (\Exception $e) {
+			$messages = array();
+			$message  = $e->getMessage();
+
+			if ($e instanceof Checkpoint\ValidationException) {
+				$messages = $e->getMessages();
+			}
+
+			return $this->response(409, new Api\Json\ResultError($data, $message, $messages));
 		}
 
 		return $record;

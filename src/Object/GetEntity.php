@@ -3,6 +3,7 @@
 namespace Hiraeth\Api\Object;
 
 use Hiraeth\Api;
+use Hiraeth\Api\Utility;
 use Hiraeth\Doctrine\AbstractRepository;
 use Doctrine\ORM\Query\QueryException;
 
@@ -11,6 +12,21 @@ use Doctrine\ORM\Query\QueryException;
  */
 class GetEntity extends AbstractAction
 {
+	/**
+	 * @var Utility\Identity
+	 */
+	protected $identity;
+
+
+	/**
+	 *
+	 */
+	public function __construct(Utility\Identity $identity)
+	{
+		$this->identity = $identity;
+	}
+
+
 	/**
 	 *
 	 */
@@ -29,29 +45,25 @@ class GetEntity extends AbstractAction
 		}
 
 		try {
-			$record = $repository->find($this->getIdentity($id));
+			if (!$record = $repository->find($this->identity->parse($id))) {
+				return $this->response(404, json_encode([
+					'error' => 'The requested item does not exist'
+				]));
+			}
 
 		} catch (\Exception $e) {
+			$message = $e->getMessage();
+
 			switch(get_class($e)) {
 				case QueryException::class:
-					$message = trim(array_slice(explode(':', $e->getMessage()), -1)[0]);
+					$message = trim(array_slice(explode(':', $message), -1)[0]);
 					break;
-				default:
-					$message = $e->getMessage();
-					break;
-
 			}
 
 			return $this->response(400, new Api\Json\ResultError($this->get(), $message));
 		}
 
-		if (!$record) {
-			return $this->response(404, json_encode([
-				'error' => 'The requested item does not exist'
-			]));
-		}
-
-		if (!$this->auth->can('get', $record)) {
+		if (!$this->auth->can('select', $record)) {
 			return $this->response(403, json_encode([
 				'error' => 'You do not have the required authorization to get this item'
 			]));
