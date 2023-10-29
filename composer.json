@@ -18,11 +18,11 @@
 	},
 	"require": {
 		"php": ">=7.2",
-        "hiraeth/json": "^1.0",
-		"hiraeth/doctrine": "^2.0",
-        "hiraeth/stash": "^2.0",
-		"hiraeth/actions": "^2.0",
-        "hiraeth/diactoros": "^2.0"
+		"hiraeth/json": "^3.0",
+		"hiraeth/doctrine": "^3.0",
+		"hiraeth/stash": "^3.0",
+		"hiraeth/actions": "^3.0",
+		"hiraeth/diactoros": "^3.0"
 	},
 	"autoload": {
 		"classmap": ["src/"]
