@@ -1,42 +1,49 @@
 {
-	"name": "hiraeth/object-api",
-	"description": "Doctrine driven object API for the Hiraeth Nano-Framework",
-	"keywords": [],
-	"license": "MIT",
-	"minimum-stability": "dev",
-	"prefer-stable": true,
-	"authors": [
-		{
-			"name": "Matthew J. Sahagian",
-			"email": "matthew.sahagian@gmail.com",
-			"role": "Lead Architect / Developer"
-		}
-	],
-	"require": {
-		"hiraeth/app": "^3.0",
-		"hiraeth/doctrine": "^3.0",
-		"hiraeth/cache": "^3.0",
-		"hiraeth/actions": "^3.0",
-		"hiraeth/diactoros": "^3.0"
-	},
-	"require-dev": {
-		"phpstan/phpstan": "^1.10",
-		"phpunit/phpunit": "^8.5"
-	},
-	"autoload": {
-		"classmap": ["src/"]
-	},
-	"type": "opus-package",
-	"extra": {
-		"opus": {
-			"hiraeth/app": {
-				"config": ""
-			}
-		}
-	},
-	"config": {
-		"allow-plugins": {
-			"imarc/opus": true
-		}
-	}
+    "name": "hiraeth/object-api",
+    "description": "Doctrine driven object API for the Hiraeth Nano-Framework",
+    "keywords": [],
+    "license": "MIT",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "authors": [
+        {
+            "name": "Matthew J. Sahagian",
+            "email": "matthew.sahagian@gmail.com",
+            "role": "Lead Architect / Developer"
+        }
+    ],
+    "require": {
+        "hiraeth/app": "^3.0",
+        "hiraeth/cache": "^3.0",
+        "hiraeth/doctrine": "^3.0",
+        "hiraeth/actions": "^3.0",
+        "hiraeth/diactoros": "^3.0"
+    },
+    "require-dev": {
+        "phpstan/phpstan": "^1.10",
+        "phpunit/phpunit": "^10.0"
+    },
+    "autoload": {
+        "classmap": [
+            "src"
+        ]
+    },
+    "autoload-dev": {
+        "classmap": [
+            "test/src"
+        ]
+    },
+    "type": "opus-package",
+    "extra": {
+        "opus": {
+            "hiraeth/app": {
+                "config": ""
+            }
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "imarc/opus": true
+        }
+    }
 }
