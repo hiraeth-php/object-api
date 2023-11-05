@@ -28,7 +28,7 @@ class Identity
 	/**
 	 *
 	 */
-	public function build(object $entity)
+	public function build(object $entity): string
 	{
 		$class     = get_class($entity);
 		$manager   = $this->managers->getManagerForClass($class);
@@ -37,7 +37,11 @@ class Identity
 
 		return base64_encode(json_encode(array_combine($identity, array_map(
 			function ($field) use ($meta_data, $entity) {
-				$value = $meta_data->getFieldValue($entity, $field);
+				$value = $meta_data
+					->getReflectionClass()
+					->getProperty($field)
+					->getValue($entity)
+				;
 
 				if ($value instanceof Proxy) {
 					$value->__load();
@@ -50,14 +54,14 @@ class Identity
 				return $value;
 			},
 			$identity
-		))));
+		))) ?: NULL);
 	}
 
 
 	/**
-	 *
+	 * @return array<string, mixed>
 	 */
-	public function parse(string $id)
+	public function parse(string $id): array
 	{
 		return (array) json_decode(base64_decode($id), TRUE);
 	}

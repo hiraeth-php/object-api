@@ -14,10 +14,13 @@
     ],
     "require": {
         "hiraeth/app": "^3.0",
+        "hiraeth/json": "^3.0",
+        "hiraeth/auth": "^3.0",
         "hiraeth/cache": "^3.0",
         "hiraeth/doctrine": "^3.0",
         "hiraeth/actions": "^3.0",
-        "hiraeth/diactoros": "^3.0"
+        "hiraeth/diactoros": "^3.0",
+        "hiraeth/checkpoint": "^3.0"
     },
     "require-dev": {
         "phpstan/phpstan": "^1.10",

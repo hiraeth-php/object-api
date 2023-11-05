@@ -4,10 +4,10 @@ namespace Hiraeth\Api\Json;
 
 use Hiraeth\Api;
 use Hiraeth\Api\Utility;
-use Json\Normalizer;
 use Hiraeth\Doctrine\ManagerRegistry;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Proxy\Proxy;
+use Json\Normalizer;
 
 /**
  *
@@ -48,9 +48,9 @@ class Entity extends Normalizer
 	{
 		$data         = array();
 		$class        = get_class($this('data'));
-		$manager      = $this->managers->getManagerForClass($class);
-		$meta_data    = $manager->getClassMetadata($class);
-		$repository   = $manager->getRepository($class);
+		$manager      = $this->managers->getManagerForClass($class ?: NULL);
+		$meta_data    = $manager->getClassMetadata($class ?: NULL);
+		$repository   = $manager->getRepository($class ?: NULL);
 		$url_identity = $this->identity->build($this('data'));
 
 		if ($this('data') instanceof Proxy) {
@@ -80,7 +80,11 @@ class Entity extends Normalizer
 		}
 
 		foreach ($fields as $field) {
-			$data[$field] = $meta_data->getFieldValue($this('data'), $field);
+			$data[$field] = $meta_data
+				->getReflectionClass()
+				->getProperty($field)
+				->getValue($this('data'))
+			;
 
 			if ($data[$field] && $meta_data->hasAssociation($field)) {
 				if ($data[$field] instanceof Collection) {

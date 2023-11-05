@@ -12,20 +12,21 @@ class ResultError extends Normalizer
 	/**
 	 * @var string
 	 */
-	protected $error = NULL;
+	protected $error;
 
 	/**
 	 * @var mixed[]
 	 */
-	protected $messages = NULL;
+	protected $messages = array();
 
 	/**
 	 * @var mixed[]
 	 */
-	protected $query = NULL;
+	protected $query = array();
 
 	/**
-	 *
+	 * @param array<mixed> $query
+	 * @param array<mixed> $messages
 	 */
 	public function __construct(array $query, string $error, array $messages = array())
 	{
@@ -40,7 +41,7 @@ class ResultError extends Normalizer
 	 */
 	public function __toString()
 	{
-		return json_encode($this);
+		return json_encode($this) ?: 'Unknown Error';
 	}
 
 

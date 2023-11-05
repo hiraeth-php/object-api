@@ -6,6 +6,8 @@ use Checkpoint;
 use Hiraeth\Api;
 use Hiraeth\Api\Utility;
 use Hiraeth\Doctrine\AbstractRepository;
+use Psr\Http\Message\ResponseInterface;
+use Json\Normalizer;
 
 /**
  *
@@ -33,33 +35,39 @@ class PostEntity extends AbstractAction
 
 
 	/**
-	 *
+	 * @param ?AbstractRepository<object> $repository
+	 * @return ResponseInterface|Normalizer
 	 */
-	public function __invoke(?AbstractRepository $repository)
+	public function __invoke(?AbstractRepository $repository): object
 	{
 		if (!$this->auth->is('user')) {
 			return $this->response(401, json_encode([
 				'error' => 'You must be authorized to get an item'
-			]));
+			]) ?: NULL);
 		}
 
 		if (empty($repository)) {
 			return $this->response(404, json_encode([
 				'error' => 'The requested pool does not exist'
-			]));
+			]) ?: NULL);
 		}
 
 		if (!$this->auth->can('create', $repository)) {
 			return $this->response(403, json_encode([
 				'error' => 'You do not have the required authorization to create this item'
-			]));
+			]) ?: NULL);
 		}
 
+		/**
+		 * @var array<string, mixed>
+		 */
+		$data = $this->request->getParsedBody() ?: array();
+
 		try {
-			$data   = $this->request->getParsedBody();
 			$record = $repository->create($data, FALSE);
 
 			//TODO: Inspect
+
 			$repository->store($record, TRUE);
 
 		} catch (\Exception $e) {

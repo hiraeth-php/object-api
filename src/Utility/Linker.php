@@ -47,7 +47,7 @@ class Linker
 
 
 	/**
-	 *
+	 * @param array<string, mixed> $params
 	 */
 	public function link(string $path, array $params = array()): string
 	{

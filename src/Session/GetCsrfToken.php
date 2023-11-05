@@ -5,6 +5,7 @@ namespace Hiraeth\Api\Session;
 use Auth;
 use Hiraeth\Session;
 use Hiraeth\Actions;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  *
@@ -19,7 +20,7 @@ class GetCsrfToken extends Actions\AbstractAction
 	/**
 	 * @var Session\Manager
 	 */
-	protected $session = NULL;
+	protected $session;
 
 
 	/**
@@ -33,14 +34,14 @@ class GetCsrfToken extends Actions\AbstractAction
 
 
 	/**
-	 * If user is logged in, give them a CSRF token.
+	 *
 	 */
-	public function __invoke()
+	public function __invoke(): ResponseInterface
 	{
 		if (!$this->auth->is('user')) {
 			return $this->response(401, json_encode([
 				'error' => 'You must be authorized to get a CSRF token'
-			]));
+			]) ?: NULL);
 		}
 
 		$token = $this->session->getCsrfToken()->getValue();

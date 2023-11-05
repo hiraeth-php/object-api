@@ -7,6 +7,7 @@ use Json\Normalizer;
 use Hiraeth\Doctrine\ManagerRegistry;
 use Hiraeth\Doctrine\AbstractRepository;
 use Doctrine\ORM\Query\QueryException;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  *
@@ -14,7 +15,7 @@ use Doctrine\ORM\Query\QueryException;
 class GetEntities extends AbstractAction
 {
 	/**
-	 * @var Hiraeth\Api\Utility\Linker
+	 * @var Api\Utility\Linker
 	 */
 	protected $linker;
 
@@ -33,26 +34,27 @@ class GetEntities extends AbstractAction
 	}
 
 	/**
-	 *
+	 * @param ?AbstractRepository<object> $repository
+	 * @return ResponseInterface|Normalizer
 	 */
-	public function __invoke(?AbstractRepository $repository, $id = NULL)
+	public function __invoke(?AbstractRepository $repository): object
 	{
 		if (!$this->auth->is('user')) {
 			return $this->response(401, json_encode([
 				'error' => 'You must be authorized to get these items'
-			]));
+			]) ?: NULL);
 		}
 
 		if (empty($repository)) {
 			return $this->response(404, json_encode([
 				'error' => 'The requested pool does not exist'
-			]));
+			]) ?: NULL);
 		}
 
 		if (!$this->auth->can('manage', $repository)) {
 			return $this->response(403, json_encode([
 				'error' => 'You do not have the required authorization to get these items'
-			]));
+			]) ?: NULL);
 		}
 
 		try {
@@ -76,8 +78,8 @@ class GetEntities extends AbstractAction
 		}
 
 		$class     = $repository->getClassName();
-		$manager   = $this->managers->getManagerForClass($class);
-		$meta_data = $manager->getClassMetaData($class);
+		$manager   = $this->managers->getManagerForClass($class ?: NULL);
+		$meta_data = $manager->getClassMetaData($class ?: NULL);
 		$fields    = array();
 
 		foreach ($meta_data->getFieldNames() as $field) {
@@ -88,12 +90,11 @@ class GetEntities extends AbstractAction
 		}
 
 		foreach ($meta_data->getAssociationNames() as $field) {
-			$mapping  = $meta_data->getAssociationMapping($field);
 			$fields[] = [
 				'name' => $field,
-				'type' => $mapping['type'] & $meta_data::TO_MANY
-					? sprintf('%s[]', $mapping['targetEntity'])
-					: $mapping['targetEntity'],
+				'type' => $meta_data->isCollectionValuedAssociation($field)
+					? sprintf('%s[]', $meta_data->getAssociationTargetClass($field))
+					: $meta_data->getAssociationTargetClass($field),
 			];
 		}
 
@@ -103,7 +104,7 @@ class GetEntities extends AbstractAction
 				function($entity) {
 					return Api\Json\Entity::prepare($entity, FALSE);
 				},
-				$result->getValues()
+				$result
 			),
 			'meta' => [
 				'total'    => $total,
