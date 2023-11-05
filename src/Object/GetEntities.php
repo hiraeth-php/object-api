@@ -4,8 +4,9 @@ namespace Hiraeth\Api\Object;
 
 use Hiraeth\Api;
 use Json\Normalizer;
-use Hiraeth\Doctrine\ManagerRegistry;
+use Hiraeth\Doctrine\AbstractEntity;
 use Hiraeth\Doctrine\AbstractRepository;
+use Hiraeth\Doctrine\ManagerRegistry;
 use Doctrine\ORM\Query\QueryException;
 use Psr\Http\Message\ResponseInterface;
 
@@ -34,7 +35,7 @@ class GetEntities extends AbstractAction
 	}
 
 	/**
-	 * @param ?AbstractRepository<object> $repository
+	 * @param ?AbstractRepository<AbstractEntity> $repository
 	 * @return ResponseInterface|Normalizer
 	 */
 	public function __invoke(?AbstractRepository $repository): object

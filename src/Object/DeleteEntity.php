@@ -4,6 +4,7 @@ namespace Hiraeth\Api\Object;
 
 use Hiraeth\Api;
 use Hiraeth\Api\Utility;
+use Hiraeth\Doctrine\AbstractEntity;
 use Hiraeth\Doctrine\AbstractRepository;
 use Psr\Http\Message\ResponseInterface;
 use Doctrine\ORM\Query\QueryException;
@@ -30,7 +31,7 @@ class DeleteEntity extends AbstractAction
 
 
 	/**
-	 * @param ?AbstractRepository<object> $repository
+	 * @param ?AbstractRepository<AbstractEntity> $repository
 	 * @return ResponseInterface|Normalizer
 	 */
 	public function __invoke(?AbstractRepository $repository, string $id): object
