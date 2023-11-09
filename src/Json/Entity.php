@@ -53,9 +53,7 @@ class Entity extends Normalizer
 		$repository   = $manager->getRepository($class ?: NULL);
 		$url_identity = $this->identity->build($this('data'));
 
-		if ($this('data') instanceof Proxy) {
-			$this('data')->__load();
-		}
+		$manager->getUnitOfWork()->initializeObject($entity);
 
 		$data['$pool'] = $this->linker->link('/objects/{repository:r}/', [
 			'repository' => $repository
