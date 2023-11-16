@@ -53,7 +53,7 @@ class Entity extends Normalizer
 		$repository   = $manager->getRepository($class ?: NULL);
 		$url_identity = $this->identity->build($this('data'));
 
-		$manager->getUnitOfWork()->initializeObject($entity);
+		$manager->getUnitOfWork()->initializeObject($this('data'));
 
 		$data['$pool'] = $this->linker->link('/objects/{repository:r}/', [
 			'repository' => $repository
