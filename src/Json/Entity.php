@@ -65,16 +65,22 @@ class Entity extends Normalizer
 		]);
 
 		if ($this('nested')) {
-			$fields = array_unique(array_merge(
-				$meta_data->getIdentifierFieldNames(),
-				$meta_data->getFieldNames()
-			));
+			$fields = array_unique(
+				array_merge(
+					$meta_data->getIdentifierFieldNames(),
+					$meta_data->getFieldNames(),
+					$this('data')::$expandable
+				)
+			);
 
 		} else {
-			$fields = array_unique(array_merge(
-				$meta_data->getFieldNames(),
-				$meta_data->getAssociationNames()
-			));
+			$fields = array_unique(
+				array_merge(
+					$meta_data->getFieldNames(),
+					$meta_data->getAssociationNames()
+				)
+			);
+
 		}
 
 		foreach ($fields as $field) {
