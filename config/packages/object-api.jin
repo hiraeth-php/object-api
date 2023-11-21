@@ -15,7 +15,7 @@
 		; Auth API related endpoints
 		;
 
-		/csrf	Hiraeth\Api\Session\GetCsrfToken									["GET"]
+		/session/csrf		Hiraeth\Api\Session\GetCsrfToken						["GET"]
 
 		;
 		; Object API related endpoints
