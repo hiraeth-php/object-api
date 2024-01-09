@@ -61,9 +61,29 @@ class GetEntities extends AbstractAction
 		try {
 			$total  = 0;
 			$page   = $this->get('p', 1);
-			$limit  = $this->get('l', 25);
+			$limit  = $this->get('l', 15);
 			$order  = $this->get('o', []);
 			$filter = $this->get('f', []);
+
+			if (!$this->has('l') && method_exists($repository, 'getApiLimit')) {
+				$limit = $repository->getApiLimit();
+			}
+
+			if ($page < 1) {
+				return $this->response(400, json_encode([
+					'error' => 'Page must be greater than or equal to 1',
+				]) ?: NULL);
+			}
+
+			if (method_exists($repository, 'getApiMaxLimit') && $limit > $repository->getApiMaxLimit()) {
+				return $this->response(400, json_encode([
+					'error' => sprintf(
+						'Maximum number of requested items cannot exceed %s',
+						$repository->getApiMaxLimit()
+					)
+				]) ?: NULL);
+			}
+
 			$result = $repository->findBy($filter, $order, $limit, ($page - 1) * $limit, $total);
 
 		} catch (\Exception $e) {
