@@ -18,7 +18,8 @@
 	},
 	"require": {
 		"php": ">=7.2",
-        "hiraeth/json": "^1.0",
+		"hiraeth/app": "^2.0",
+        "hiraeth/json": "^2.0",
 		"hiraeth/doctrine": "^2.0",
         "hiraeth/stash": "^2.0",
 		"hiraeth/actions": "^2.0",
