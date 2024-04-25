@@ -4,6 +4,7 @@ namespace Hiraeth\Api\Utility;
 
 use Doctrine\Common\Proxy\Proxy;
 use Hiraeth\Doctrine\ManagerRegistry;
+use InvalidArgumentException;
 
 /**
  *
@@ -63,6 +64,27 @@ class Identity
 	 */
 	public function parse(string $id): array
 	{
-		return (array) json_decode(base64_decode($id), TRUE);
+		$json  = base64_decode($id);
+		$ident = json_decode($json, TRUE);
+
+		if (!is_array($ident)) {
+			throw new InvalidArgumentException(
+				'Invalid identifier specified, incorrect format'
+			);
+		}
+
+		if (empty($ident)) {
+			throw new InvalidArgumentException(
+				'Invalid identifier specified, insufficient keys specified'
+			);
+		}
+
+		if (count(array_filter(array_keys($ident), 'is_numeric')) != count($ident)) {
+			throw new InvalidArgumentException(
+				'Invalid identifier specified, improper keys specified'
+			);
+		}
+
+		return $ident;
 	}
 }

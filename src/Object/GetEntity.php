@@ -55,7 +55,7 @@ class GetEntity extends AbstractAction
 				]) ?: NULL);
 			}
 
-		} catch (\Exception $e) {
+		} catch (\Throwable $e) {
 			$message = $e->getMessage();
 
 			switch(get_class($e)) {

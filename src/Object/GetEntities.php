@@ -8,6 +8,7 @@ use Hiraeth\Doctrine\AbstractEntity;
 use Hiraeth\Doctrine\AbstractRepository;
 use Hiraeth\Doctrine\ManagerRegistry;
 use Doctrine\ORM\Query\QueryException;
+use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -84,9 +85,16 @@ class GetEntities extends AbstractAction
 				]) ?: NULL);
 			}
 
+			if ($invalid = array_diff(array_keys($filter), array_keys(array_filter($filter)))) {
+				throw new InvalidArgumentException(sprintf(
+					'Invalid filter parameter values specified for: %s',
+					implode(', ', $invalid)
+				));
+			}
+
 			$result = $repository->findBy($filter, $order, $limit, ($page - 1) * $limit, $total);
 
-		} catch (\Exception $e) {
+		} catch (\Throwable $e) {
 			$message = $e->getMessage();
 
 			switch(get_class($e)) {
