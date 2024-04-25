@@ -79,7 +79,7 @@ class Identity
 			);
 		}
 
-		if (count(array_filter(array_keys($ident), 'is_numeric')) != count($ident)) {
+		if (count(array_filter(array_keys($ident), 'is_numeric')) > 0) {
 			throw new InvalidArgumentException(
 				'Invalid identifier specified, improper keys specified'
 			);
