@@ -4,7 +4,7 @@ namespace Hiraeth\Api\Utility;
 
 use Hiraeth\Application;
 use Hiraeth\Routing\Resolver;
-use Hiraeth\Routing\UrlGenerator;
+use Hiraeth\Http\UrlGenerator;
 
 /**
  *
